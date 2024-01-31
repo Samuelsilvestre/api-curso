@@ -1,7 +1,6 @@
 package com.api.course.Controller;
 
 import java.util.List;
-import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.course.dto.CourseDto;
 import com.api.course.models.Course;
 import com.api.course.repository.CourseRepository;
+import com.api.course.service.CourseService;
 
 import jakarta.validation.Valid;
 
@@ -26,35 +27,28 @@ public class CourseController {
     
     @Autowired
     private CourseRepository repository;
+
+    @Autowired
+    private CourseService service;
    
     @GetMapping("/get/course")
-    public List<Course> listCourse() {
-        return repository.findAll();
+    public List<CourseDto> listCourse() {
+        return service.listAll();
     }
     
     @GetMapping("/get/course/{id}")
-    public ResponseEntity<Course> getId(@PathVariable Long id) {
-        return repository.findById(id)
-        .map(c -> ResponseEntity.ok().body(c))
-        .orElse(ResponseEntity.notFound().build());
+    public CourseDto getId(@PathVariable Long id) {
+        return service.getOne(id);
     }
 
     @PostMapping("/post/course")
-    public Course createCourse(@RequestBody @Valid Course course) {
-        return repository.save(course);
+    public CourseDto createCourse(@RequestBody @Valid CourseDto course) {
+        return service.create(course);
     }
 
     @PutMapping("/put/course/{id}")
-    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody @Valid Course course) {
-        return repository.findById(id)
-        .map(record -> {
-            record.setTitle(course.getTitle());
-            record.setCategory(course.getCategory());
-            record.setDescription(course.getDescription());
-            Course courseUpdate = repository.save(record);
-            return ResponseEntity.ok().body(courseUpdate);
-        })
-        .orElse(ResponseEntity.notFound().build());
+    public CourseDto updateCourse(@PathVariable Long id, @RequestBody @Valid CourseDto course) {
+        return service.update(id, course);
     }
 
     @DeleteMapping("/delete/course/{id}")

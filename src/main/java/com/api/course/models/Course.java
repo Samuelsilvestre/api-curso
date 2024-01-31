@@ -2,7 +2,7 @@ package com.api.course.models;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLSelect;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.DialectOverride.Where;
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.Column;
@@ -15,10 +15,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+
 @Entity
 @Table(name = "course")
-@SQLDelete(sql = "UPDATE course SET status='Inativo' where id=? ")
-@SQLSelect(sql = "SELECT * FROM course where status='Ativo' ")
+@SQLDelete(sql = "UPDATE course SET status='Inativo' WHERE id=?")
 public class Course {
 
     @Id

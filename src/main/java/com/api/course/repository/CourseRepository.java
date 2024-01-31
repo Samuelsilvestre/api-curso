@@ -9,3 +9,4 @@ import com.api.course.models.Course;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     
 }
+
